@@ -29,17 +29,12 @@ public class SearchController {
     // TODO #3 - Create a handler to process a search request and render the updated search view.
     @PostMapping(value= "results")
     public String displaySearchResults(Model model, @RequestParam String searchType, @RequestParam String searchTerm) {
-        //searchTerm, searchType
         ArrayList<Job> jobs;
-        if ((searchTerm.equals("all") || searchTerm.isEmpty() ) && (searchType == null || searchType.equals("all"))) {
+        // Check if searchTerm is "all" or empty, and call the appropriate method
+        if (searchTerm.toLowerCase().equals("all") || searchTerm.isBlank()) {
             jobs = JobData.findAll();
-            model.addAttribute("title", "All Jobs");
         } else {
             jobs = JobData.findByColumnAndValue(searchType, searchTerm);
-            model.addAttribute("title", "Jobs with " + searchType + ": " + searchTerm);
-        }
-        if (jobs.isEmpty()) {
-            model.addAttribute("empty", true); //no results validation - used in th:if statement in "search"
         }
         model.addAttribute("jobs", jobs);
         model.addAttribute("columns", columnChoices);
